@@ -1,32 +1,83 @@
+# 📚 Bookstore Database Management System
 
-# Bookstore Database:
+This project represents a complete design and implementation of a **Bookstore Database System** in MySQL. It efficiently manages the bookstore’s operations, including **inventory tracking**, **customer management**, **order processing**, **address handling**, and **role-based user access**.
 
-T- his project represents the design and structure of a Bookstore Management Database System, built to handle various operations such as book inventory, customer management, order processing, shipping, and address tracking.
+---
 
- ## Entity-Relationship Diagram (ERD):
-- The ERD showcases how different entities in the bookstore interact with one another. Key components include:
+## 🗂️ Entity-Relationship Overview
 
- ## Books: 
-- Stores information about book titles, language, price, stock, and associated publishers and authors.
+The system is modeled using 15 interconnected tables, with **foreign keys**, **lookup tables**, and **enum values** for clean, normalized relational design.
 
-## Authors & Publishers:
- -Connected through a junction table (book_author) to handle many-to-many relationships between books and authors.
+### 📖 Books
+- Tracks each book's publication year, language, price, stock level, and publisher.
+- Connected to authors via a **many-to-many** relationship using `book_author`.
 
-## Customers: 
-- Stores customer details and is linked to multiple addresses through customer_address.
+### ✍️ Authors & 📦 Publishers
+- `author`: Stores basic info (first and last names).
+- `publisher`: Holds publisher details and is referenced by books.
+- `book_author`: A junction table managing the many-to-many relationship between books and authors.
 
-## Orders:
-- Each customer can place orders, consisting of one or more books (order_line). Orders are tied to shipping methods and order statuses.
+### 👥 Customers
+- Captures customer details like name, contact, and registration date.
+- Linked to multiple addresses via the `customer_address` table.
 
-## Shipping & Order Status: 
-- Tracks how orders are delivered and their current processing state.
+### 🏡 Addresses & 🌍 Countries
+- `address`: Stores street, city, postal code, and country info.
+- `country`: A lookup table of all countries.
+- Each address also has a `status_id` (linked to `address_status`) and a **purpose** stored in `customer_address.address_type` using an `ENUM` (e.g., `'current'`, `'old'`).
 
-## Addresses:
- - Each customer can have multiple addresses, with details about their status and location (linked to countries).
+### 🧾 Orders & Order Lines
+- `cust_order`: Stores customer orders with status, shipping method, and timestamp.
+- `order_line`: Contains individual books within an order, with quantity and per-item price.
 
-## Order History:
- -Logs the progression of orders over time.
+### 🚚 Shipping & 📦 Order Status
+- `shipping_method`: Defines available shipping types (e.g., Standard, Express).
+- `order_status`: Lookup table for tracking current state (e.g., pending, shipped, delivered).
 
- ## Roles & Permissions:
-- This project is designed for collaborative development, where MySQL roles can be created and assigned to multiple collaborators.
-- Roles restrict access based on the required actions such as read, write, or update.
+### 🕓 Order History
+- `order_history`: Logs every change in order status over time.
+
+---
+
+## 🔐 Roles & Permissions (MySQL)
+
+This system is designed with **role-based access control**:
+
+| Role          | Privileges                                |
+|---------------|--------------------------------------------|
+| `admin_role`  | Full access with `GRANT OPTION` on all DBs |
+| `developer`   | `SELECT`, `INSERT`, `UPDATE`, `DELETE` on `bookstore_db` only |
+
+### 👤 Users Created
+- `David` → `admin_role`
+- `Sumaya`, `Grace` → `developer`
+
+---
+
+## ✅ Key Features
+
+- 15 normalized and well-connected tables
+- Use of `ENUM` in `customer_address` for simple status tracking
+- Referential integrity via foreign key constraints
+- Role-based access for safe collaboration
+- Smart use of `DEFAULT CURRENT_TIMESTAMP` and `ON DELETE CASCADE` for automation and cleanup
+
+---
+
+## 📁 Tools Used
+
+- **MySQL**: For database schema design and queries
+- **Draw.io**: For ERD visualization
+
+---
+
+## 📌 Setup
+
+To use the database:
+1. Import the SQL schema into your MySQL server.
+2. Run the role and user creation script (with strong passwords).
+3. Start testing using your preferred SQL client or workbench.
+
+---
+
+Happy querying! 📊🧠
