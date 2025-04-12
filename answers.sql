@@ -89,7 +89,7 @@ CREATE TABLE customer(
     last_name VARCHAR(100),
     email VARCHAR(100),
     phone VARCHAR(100),
-    regis_date date
+    regis_date DATE DEFAULT CURRENT_DATE
  );
  
   -- country table
@@ -118,11 +118,80 @@ CREATE TABLE customer(
  );
  
  -- customer_address table
- CREATE TABLE customer_address(
+ CREATE TABLE customer_address (
     customer_id INT,
-    FOREIGN KEY(customer_id) REFERENCES customer(customer_id),
-    
     address_id INT,
-    FOREIGN KEY(address_id) REFERENCES address(address_id)
- );
+    address_type ENUM('current', 'old') NOT NULL,
+
+    PRIMARY KEY (customer_id, address_id),
+
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
  
+ -- cust_order table
+ CREATE TABLE cust_order (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status_id INT,
+    shipping_method_id INT,
+    total_amount DECIMAL(10, 2),
+
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    FOREIGN KEY (status_id) REFERENCES order_status(status_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+
+    FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(shipping_method_id)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- order_line Table
+CREATE TABLE order_line (
+    order_id INT,
+    book_id INT,
+    quantity INT NOT NULL,
+    price_each DECIMAL(10, 2) NOT NULL,
+
+    PRIMARY KEY (order_id, book_id),
+
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- shipping_method table
+CREATE TABLE shipping_method (
+    shipping_method_id INT AUTO_INCREMENT PRIMARY KEY,
+    method_name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT
+);
+
+-- order_history table
+CREATE TABLE order_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    status_id INT,
+    changed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    note TEXT,
+
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    FOREIGN KEY (status_id) REFERENCES order_status(status_id)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+ -- order_ststus table
+CREATE TABLE order_status (
+    status_id INT AUTO_INCREMENT PRIMARY KEY,
+    status_name VARCHAR(50) NOT NULL UNIQUE
+);
