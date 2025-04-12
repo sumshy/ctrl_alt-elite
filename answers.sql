@@ -80,3 +80,48 @@ CREATE TABLE publisher (
     full_name VARCHAR(150) NOT NULL,
     contact_email VARCHAR(100)
 );
+
+
+-- customer table
+create table customer(
+customer_id int auto_increment primary key,
+ first_name varchar(100),
+ last_name varchar(100),
+ email varchar(100),
+ phone varchar(100),
+ regis_date date
+ );
+ 
+  -- country table
+ create table country(
+ country_id int auto_increment primary key,
+ country_name varchar(100)
+ );
+ 
+ --  address status table
+ create table address_status(
+ address_id int auto_increment primary key,
+ status_name varchar(100)
+ );
+ 
+--  address table
+ create table address(
+ address_id int auto_increment primary key,
+ street varchar(100),
+ city varchar(100),
+ postal_code varchar(100),
+ country_id int,
+ foreign key(country_id) references country(country_id),
+ status_id int,
+ foreign key(status_id) references address_status(address_id)
+ );
+ 
+ -- customer_address table
+ create table customer_address(
+ customer_id int,
+ foreign key(customer_id) references customer(customer_id),
+ 
+ address_id int,
+ foreign key(address_id) references address(address_id)
+ );
+ 
