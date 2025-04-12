@@ -36,7 +36,7 @@ CREATE TABLE book (
     price DECIMAL(10, 2) NOT NULL,
     stock_quantity INT DEFAULT 0,
 
-    FOREIGN KEY (language_id) REFERENCES language(language_id)
+    FOREIGN KEY (language_id) REFERENCES book_language(language_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
 
     FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id)
@@ -83,45 +83,46 @@ CREATE TABLE publisher (
 
 
 -- customer table
-create table customer(
-customer_id int auto_increment primary key,
- first_name varchar(100),
- last_name varchar(100),
- email varchar(100),
- phone varchar(100),
- regis_date date
+CREATE TABLE customer(
+    customer_id INT auto_increment primary key,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(100),
+    regis_date date
  );
  
   -- country table
- create table country(
- country_id int auto_increment primary key,
- country_name varchar(100)
+ CREATE TABLE country(
+    country_id INT auto_increment PRIMARY KEY,
+    country_code VARCHAR(10),
+    country_name VARCHAR(100)
  );
  
  --  address status table
- create table address_status(
- address_id int auto_increment primary key,
- status_name varchar(100)
+ CREATE TABLE address_status(
+    status_id INT auto_increment PRIMARY KEY,
+    status_name VARCHAR(100)
  );
  
 --  address table
- create table address(
- address_id int auto_increment primary key,
- street varchar(100),
- city varchar(100),
- postal_code varchar(100),
- country_id int,
- foreign key(country_id) references country(country_id),
- status_id int,
- foreign key(status_id) references address_status(address_id)
+ CREATE TABLE address(
+    address_id INT auto_increment PRIMARY KEY,
+    street VARCHAR(100),
+    city VARCHAR(100),
+    postal_code VARCHAR(100),
+    country_id INT,
+    FOREIGN KEY(country_id) REFERENCES country(country_id),
+    status_id INT,
+    FOREIGN KEY(status_id) REFERENCES address_status(status_id)
  );
  
  -- customer_address table
- create table customer_address(
- customer_id int,
- foreign key(customer_id) references customer(customer_id),
- 
- address_id int,
- foreign key(address_id) references address(address_id)
+ CREATE TABLE customer_address(
+    customer_id INT,
+    FOREIGN KEY(customer_id) REFERENCES customer(customer_id),
+    
+    address_id INT,
+    FOREIGN KEY(address_id) REFERENCES address(address_id)
  );
  
