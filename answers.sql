@@ -89,7 +89,7 @@ CREATE TABLE customer(
     last_name VARCHAR(100),
     email VARCHAR(100),
     phone VARCHAR(100),
-    regis_date DATE DEFAULT CURRENT_DATE
+    regis_date DATETIME DEFAULT CURRENT_TIMESTAMP
  );
  
   -- country table
